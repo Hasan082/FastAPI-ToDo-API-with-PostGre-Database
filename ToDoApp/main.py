@@ -94,4 +94,6 @@ async def create_todo(db: db_dependency, todo_request: ToDoRequest):
     db.add(todo_model)
     db.commit()
 
+
+
 # https://gale.udemy.com/course/fastapi-the-complete-course/learn/lecture/29025864#overview
