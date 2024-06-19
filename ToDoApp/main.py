@@ -115,7 +115,7 @@ async def create_todo(db: db_dependency, todo_request: ToDoRequest):
     return todo_model
 
 
-@app.put('/todo/{todo_id}', status_code=status.HTTP_200_OK)
+@app.put('/todo/{todo_id}', status_code=status.HTTP_204_NO_CONTENT)
 async def update_todo(db: db_dependency, todo_id: int, todo_request: ToDoRequest):
     todo_model = db.query(ToDos).filter(ToDos.id == todo_id).first()
     if todo_model is None:
@@ -128,4 +128,4 @@ async def update_todo(db: db_dependency, todo_id: int, todo_request: ToDoRequest
     db.add(todo_model)
     db.commit()
 
-# https://gale.udemy.com/course/fastapi-the-complete-course/learn/lecture/29025864#overview
+# https://gale.udemy.com/course/fastapi-the-complete-course/learn/lecture/29025916#overview
