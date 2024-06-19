@@ -88,11 +88,34 @@ async def read_single_todo(db: db_dependency, todo_id: int = Path(gt=0)):
     raise HTTPException(status_code=404, detail="ToDo not found")
 
 
+# Define a route to handle POST requests to create a new ToDo item
 @app.post('/todo', status_code=status.HTTP_201_CREATED)
 async def create_todo(db: db_dependency, todo_request: ToDoRequest):
+    """
+    Endpoint to create a new ToDo item.
+
+    Parameters:
+    - `db`: Dependency to obtain a database session.
+    - `todo_request`: Request body containing details of the ToDo item to be created.
+
+    Creates a new ToDo item instance using the data provided in `todo_request`.
+    Adds the new ToDo item to the database session (`db`) and commits the transaction.
+    Returns the created ToDo item.
+    """
+    # Create a new instance of ToDos model using data from todo_request
     todo_model = ToDos(**todo_request.dict())
+
+    # Add the new ToDo item to the database session
     db.add(todo_model)
+
+    # Commit the session to save the new ToDo item in the database
     db.commit()
+
+    # Return the created ToDo item
+    return todo_model
+
+
+
 
 
 
