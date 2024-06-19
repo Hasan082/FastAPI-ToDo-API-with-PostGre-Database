@@ -5,6 +5,7 @@ import models  # Importing the models module containing the database models
 from models import ToDos  # Importing the ToDos model from the models module
 from database import engine, SessionLocal  # Importing the engine and SessionLocal for database interaction
 from starlette import status  # Importing status codes from starlette
+from pydantic import BaseModel, Field
 
 # Create an instance of the FastAPI class
 app = FastAPI(title="ToDo API using FastAPI by Hasan", description="ToDoApp By FastAPI", version="1.0.0")
@@ -28,6 +29,32 @@ def get_db():
 
 # Creating dependency variable to avoid duplicate use
 db_dependency = Annotated[Session, Depends(get_db)]
+
+
+class ToDoRequest(BaseModel):
+    """
+    This class defines the schema for a ToDo item request.
+    It is used to validate and structure the data for creating or updating ToDo items.
+
+    Attributes:
+        title (str): The title of the ToDo item, must be between 3 and 70 characters.
+        description (str): A brief description of the ToDo item, must be between 3 and 120 characters.
+        priority (int): The priority level of the ToDo item, must be an integer between 1 and 5 (inclusive).
+        completed (bool): A boolean indicating whether the ToDo item is completed or not.
+    """
+
+    # The title of the ToDo item
+    title: str = Field(min_length=3, max_length=70, description="The title of the ToDo item (3-70 characters)")
+
+    # A brief description of the ToDo item
+    description: str = Field(min_length=3, max_length=120,
+                             description="A brief description of the ToDo item (3-120 characters)")
+
+    # The priority level of the ToDo item
+    priority: int = Field(gt=0, lt=6, description="The priority level of the ToDo item (1-5)")
+
+    # A boolean indicating whether the ToDo item is completed or not
+    completed: bool
 
 
 # Define a route to handle GET requests at the root URL
@@ -59,5 +86,12 @@ async def read_single_todo(db: db_dependency, todo_id: int = Path(gt=0)):
         return todo_model
 
     raise HTTPException(status_code=404, detail="ToDo not found")
+
+
+@app.post('/todo', status_code=status.HTTP_201_CREATED)
+async def create_todo(db: db_dependency, todo_request: ToDoRequest):
+    todo_model = ToDos(**todo_request.dict())
+    db.add(todo_model)
+    db.commit()
 
 # https://gale.udemy.com/course/fastapi-the-complete-course/learn/lecture/29025864#overview
