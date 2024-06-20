@@ -149,12 +149,30 @@ async def update_todo(db: db_dependency, todo_request: ToDoRequest, todo_id: int
     db.commit()
 
 
+# Define a route to handle DELETE requests to delete a ToDo item by its ID
 @app.delete('/todo/{todo_id}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_todo(db: db_dependency, todo_id: int = Path(gt=0)):
+    """
+    Endpoint to delete a ToDo item by its ID.
+
+    Parameters:
+    - `db`: Dependency to obtain a database session.
+    - `todo_id`: Path parameter representing the ID of the ToDo item to delete.
+
+    Deletes the ToDo item identified by `todo_id` from the database.
+    If the ToDo item with `todo_id` does not exist, raises a 404 HTTPException.
+    """
+    # Query the database for the ToDo item with the specified ID
     todo_model = db.query(ToDos).filter(ToDos.id == todo_id).first()
+
+    # If ToDo item with `todo_id` does not exist, raise a 404 HTTPException
     if todo_model is None:
         raise HTTPException(status_code=404, detail="ToDo not found")
+
+    # Delete the ToDo item from the database
     db.query(ToDos).filter(ToDos.id == todo_id).delete()
+
+    # Commit the session to apply the deletion
     db.commit()
 
 
