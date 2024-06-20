@@ -115,17 +115,37 @@ async def create_todo(db: db_dependency, todo_request: ToDoRequest):
     return todo_model
 
 
+# Define a route to handle PUT requests to update a ToDo item by its ID
 @app.put('/todo/{todo_id}', status_code=status.HTTP_204_NO_CONTENT)
 async def update_todo(db: db_dependency, todo_request: ToDoRequest, todo_id: int = Path(gt=0)):
+    """
+    Endpoint to update a ToDo item by its ID.
+
+    Parameters:
+    - `db`: Dependency to obtain a database session.
+    - `todo_request`: Request body containing updated details of the ToDo item.
+    - `todo_id`: Path parameter representing the ID of the ToDo item to update.
+
+    Updates the ToDo item identified by `todo_id` with the data provided in `todo_request`.
+    If the ToDo item with `todo_id` does not exist, raises a 404 HTTPException.
+    """
+    # Query the database for the ToDo item with the specified ID
     todo_model = db.query(ToDos).filter(ToDos.id == todo_id).first()
+
+    # If ToDo item with `todo_id` does not exist, raise a 404 HTTPException
     if todo_model is None:
         raise HTTPException(status_code=404, detail="ToDo not found")
+
+    # Update the ToDo item attributes with data from `todo_request`
     todo_model.title = todo_request.title
     todo_model.description = todo_request.description
     todo_model.priority = todo_request.priority
     todo_model.completed = todo_request.completed
 
+    # Add the updated ToDo item to the database session
     db.add(todo_model)
+
+    # Commit the session to save the updates in the database
     db.commit()
 
-# https://gale.udemy.com/course/fastapi-the-complete-course/learn/lecture/29025916#overview
+
