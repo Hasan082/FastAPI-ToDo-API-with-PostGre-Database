@@ -117,7 +117,7 @@ async def create_todo(user: user_dependency, db: db_dependency, todo_request: To
 
 # Define a route to handle PUT requests to update a ToDo item by its ID
 @router.put('/todo/{todo_id}', status_code=status.HTTP_204_NO_CONTENT)
-async def update_todo(db: db_dependency, todo_request: ToDoRequest, todo_id: int = Path(gt=0)):
+async def update_todo(user: user_dependency, db: db_dependency, todo_request: ToDoRequest, todo_id: int = Path(gt=0)):
     """
     Endpoint to update a ToDo item by its ID.
 
@@ -129,8 +129,12 @@ async def update_todo(db: db_dependency, todo_request: ToDoRequest, todo_id: int
     Updates the ToDo item identified by `todo_id` with the data provided in `todo_request`.
     If the ToDo item with `todo_id` does not exist, raises a 404 HTTPException.
     """
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+
     # Query the database for the ToDo item with the specified ID
-    todo_model = db.query(ToDos).filter(ToDos.id == todo_id).first()
+    todo_model = db.query(ToDos).filter(ToDos.id == todo_id)\
+        .filter(ToDos.owner_id==user.get('user_id')).first()
 
     # If ToDo item with `todo_id` does not exist, raise a 404 HTTPException
     if todo_model is None:
