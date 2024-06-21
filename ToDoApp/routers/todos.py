@@ -5,7 +5,7 @@ from models import ToDos  # Importing the ToDos model from the models module
 from database import SessionLocal  # Importing the engine and SessionLocal for database interaction
 from starlette import status  # Importing status codes from starlette
 from pydantic import BaseModel, Field
-
+from .auth import get_current_user
 
 router = APIRouter()
 
@@ -25,6 +25,7 @@ def get_db():
 
 # Creating dependency variable to avoid duplicate use
 db_dependency = Annotated[Session, Depends(get_db)]
+user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
 class ToDoRequest(BaseModel):
@@ -55,14 +56,14 @@ class ToDoRequest(BaseModel):
 
 # Define a route to handle GET requests at the root URL
 @router.get("/", status_code=status.HTTP_200_OK)
-async def read_all(db: db_dependency):
+async def read_all(user: user_dependency, db: db_dependency):
     """
     Endpoint to read all ToDos from the database.
     - `db`: The database session provided by the `get_db` dependency.
 
     Returns a list of all ToDo items.
     """
-    return db.query(ToDos).all()
+    return db.query(ToDos).filter(ToDos.owner_id == user.get('user_id')).all()
 
 
 # Define a route to handle GET requests to fetch a single ToDo by its ID
@@ -86,7 +87,7 @@ async def read_single_todo(db: db_dependency, todo_id: int = Path(gt=0)):
 
 # Define a route to handle POST requests to create a new ToDo item
 @router.post('/todo', status_code=status.HTTP_201_CREATED)
-async def create_todo(db: db_dependency, todo_request: ToDoRequest):
+async def create_todo(user: user_dependency, db: db_dependency, todo_request: ToDoRequest):
     """
     Endpoint to create a new ToDo item.
 
@@ -98,8 +99,11 @@ async def create_todo(db: db_dependency, todo_request: ToDoRequest):
     Adds the new ToDo item to the database session (`db`) and commits the transaction.
     Returns the created ToDo item.
     """
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+
     # Create a new instance of ToDos model using data from todo_request
-    todo_model = ToDos(**todo_request.dict())
+    todo_model = ToDos(**todo_request.dict(), owner_id=user.get('user_id'))
 
     # Add the new ToDo item to the database session
     db.add(todo_model)

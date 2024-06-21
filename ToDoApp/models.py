@@ -1,6 +1,6 @@
 from database import Base
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
-
+from sqlalchemy.orm import relationship
 
 class User(Base):
     __tablename__ = 'users'
@@ -13,7 +13,7 @@ class User(Base):
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
     role = Column(String)
-
+    todos = relationship('ToDos', back_populates='owner')
 
 
 class ToDos(Base):
@@ -24,4 +24,5 @@ class ToDos(Base):
     description = Column(String)
     priority = Column(Integer)
     completed = Column(Boolean, default=False)
-    owner_id = Column(Integer, ForeignKey('users.id'))
+    owner_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    owner = relationship('User', back_populates='todos')
