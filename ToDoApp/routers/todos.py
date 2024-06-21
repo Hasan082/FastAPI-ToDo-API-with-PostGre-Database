@@ -68,7 +68,7 @@ async def read_all(user: user_dependency, db: db_dependency):
 
 # Define a route to handle GET requests to fetch a single ToDo by its ID
 @router.get("/todo/{todo_id}", status_code=status.HTTP_200_OK)
-async def read_single_todo(db: db_dependency, todo_id: int = Path(gt=0)):
+async def read_single_todo(user: user_dependency, db: db_dependency, todo_id: int = Path(gt=0)):
     """
     Endpoint to read a single ToDo by ID.
     - `todo_id`: The ID of the ToDo item to retrieve, must be greater than 0.
@@ -77,7 +77,10 @@ async def read_single_todo(db: db_dependency, todo_id: int = Path(gt=0)):
     If the ToDo item is found, returns the ToDo item.
     If not found, raises a 404 HTTPException with the detail "ToDo not found".
     """
-    todo_model = db.query(ToDos).filter(ToDos.id == todo_id).first()
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+
+    todo_model = db.query(ToDos).filter(ToDos.id == todo_id).filter(ToDos.owner_id==user.get('user_id')).first()
 
     if todo_model is not None:
         return todo_model
