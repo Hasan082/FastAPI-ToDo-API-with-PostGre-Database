@@ -1,7 +1,7 @@
 from fastapi import FastAPI # Importing FastAPI, Depends for dependency injection
 import models  # Importing the models module containing the database models
 from database import engine # Importing the engine and SessionLocal for database interaction
-from routers import auth, todos
+from routers import auth, todos, admin
 
 
 # Create an instance of the FastAPI class
@@ -12,3 +12,4 @@ models.Base.metadata.create_all(bind=engine)
 
 app.include_router(auth.router)
 app.include_router(todos.router)
+app.include_router(admin.router)

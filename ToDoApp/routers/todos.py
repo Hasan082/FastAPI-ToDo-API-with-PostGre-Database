@@ -80,7 +80,7 @@ async def read_single_todo(user: user_dependency, db: db_dependency, todo_id: in
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
 
-    todo_model = db.query(ToDos).filter(ToDos.id == todo_id).filter(ToDos.owner_id==user.get('user_id')).first()
+    todo_model = db.query(ToDos).filter(ToDos.id == todo_id).filter(ToDos.owner_id == user.get('user_id')).first()
 
     if todo_model is not None:
         return todo_model
@@ -136,8 +136,8 @@ async def update_todo(user: user_dependency, db: db_dependency, todo_request: To
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
 
     # Query the database for the ToDo item with the specified ID
-    todo_model = db.query(ToDos).filter(ToDos.id == todo_id)\
-        .filter(ToDos.owner_id==user.get('user_id')).first()
+    todo_model = db.query(ToDos).filter(ToDos.id == todo_id) \
+        .filter(ToDos.owner_id == user.get('user_id')).first()
 
     # If ToDo item with `todo_id` does not exist, raise a 404 HTTPException
     if todo_model is None:
@@ -169,19 +169,20 @@ async def delete_todo(user: user_dependency, db: db_dependency, todo_id: int = P
     Deletes the ToDo item identified by `todo_id` from the database.
     If the ToDo item with `todo_id` does not exist, raises a 404 HTTPException.
     """
+
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
 
     # Query the database for the ToDo item with the specified ID
     todo_model = db.query(ToDos).filter(ToDos.id == todo_id)\
-        .filter(ToDos.owner_id==user.get('user_id')).first()
+        .filter(ToDos.owner_id == user.get('user_id')).first()
 
     # If ToDo item with `todo_id` does not exist, raise a 404 HTTPException
     if todo_model is None:
         raise HTTPException(status_code=404, detail="ToDo not found")
 
     # Delete the ToDo item from the database
-    db.query(ToDos).filter(ToDos.id == todo_id).filter(ToDos.owner_id==user.get('user_id')).delete()
+    db.query(ToDos).filter(ToDos.id == todo_id).filter(ToDos.owner_id == user.get('user_id')).delete()
 
     # Commit the session to apply the deletion
     db.commit()
