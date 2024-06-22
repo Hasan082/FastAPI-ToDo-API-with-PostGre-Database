@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException  # Importing FastAPI compo
 from pydantic import BaseModel  # Importing BaseModel from Pydantic for request and response schemas
 from sqlalchemy.orm import Session  # Importing Session for database operations
 from starlette import status  # Importing HTTP status codes from starlette
-from database import SessionLocal  # Importing SessionLocal for database session
-from models import User  # Importing User model
+from ..database import SessionLocal  # Importing SessionLocal for database session
+from ..models import User  # Importing User model
 from passlib.context import CryptContext  # Importing CryptContext for password hashing
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer  # Importing OAuth2 components for security
 from jose import jwt, JWTError  # Importing JWT components from jose for token handling

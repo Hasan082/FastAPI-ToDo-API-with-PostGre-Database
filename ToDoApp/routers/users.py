@@ -2,8 +2,8 @@ from typing import Annotated  # Importing Annotated for type annotations with me
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session  # Importing Session for type hinting
 from fastapi import APIRouter, Depends, HTTPException, Path  # Importing FastAPI, Depends for dependency injection
-from models import ToDos, User  # Importing the ToDos and User models from the models module
-from database import SessionLocal  # Importing the engine and SessionLocal for database interaction
+from ..models import ToDos, User  # Importing the ToDos and User models from the models module
+from ..database import SessionLocal  # Importing the engine and SessionLocal for database interaction
 from starlette import status  # Importing status codes from starlette
 from pydantic import BaseModel, Field
 from .auth import get_current_user  # Importing the get_current_user function from auth module

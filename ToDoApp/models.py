@@ -1,5 +1,5 @@
 # Importing necessary components from SQLAlchemy and database module
-from database import Base  # Importing the Base class from the database module for declarative base class
+from .database import Base  # Importing the Base class from the database module for declarative base class
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey  # Importing column types and ForeignKey
 from sqlalchemy.orm import relationship  # Importing relationship for setting up ORM relationships
 
