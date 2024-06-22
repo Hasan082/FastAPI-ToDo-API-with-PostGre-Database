@@ -17,7 +17,7 @@ class User(Base):
     hashed_password = Column(String)  # Hashed password column for storing encrypted passwords
     is_active = Column(Boolean, default=True)  # Boolean column to indicate if the user is active, default is True
     role = Column(String)  # Role column to store user roles
-
+    phone_number = Column(String) # Phone number for user
 
     # Setting up a one-to-many relationship with the ToDos model The 'todos' attribute will contain a list of ToDos
     # objects associated with this User back_populates='owner' indicates that the 'owner' relationship in the ToDos
