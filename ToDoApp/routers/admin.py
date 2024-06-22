@@ -47,3 +47,6 @@ async def delete_todo(user: user_dependency, db: db_dependency, todo_id: int = P
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='ToDo not found')
     db.query(ToDos).filter(ToDos.id == todo_id).delete()
     db.commit()
+
+
+# https://gale.udemy.com/course/fastapi-the-complete-course/learn/lecture/37437346#overview
