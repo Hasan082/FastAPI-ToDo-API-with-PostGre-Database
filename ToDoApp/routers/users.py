@@ -14,6 +14,7 @@ router = APIRouter(
     tags=['users']
 )
 
+
 # Dependency function to get a database session
 def get_db():
     """
@@ -26,10 +27,12 @@ def get_db():
     finally:
         db.close()
 
+
 # Creating dependency variables to avoid duplicate use
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 # Pydantic model for password verification and update
 class UserVerification(BaseModel):
@@ -42,6 +45,7 @@ class UserVerification(BaseModel):
     """
     password: str
     new_password: str
+
 
 @router.get("/me", status_code=status.HTTP_200_OK)
 async def read_user(user: user_dependency, db: db_dependency):
@@ -59,6 +63,7 @@ async def read_user(user: user_dependency, db: db_dependency):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     return db.query(User).filter(User.id == user.get('user_id')).first()
+
 
 @router.put("/me/password", status_code=status.HTTP_204_NO_CONTENT)
 async def update_password(user: user_dependency, db: db_dependency, userVerification: UserVerification):

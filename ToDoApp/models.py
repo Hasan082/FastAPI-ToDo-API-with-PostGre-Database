@@ -18,6 +18,7 @@ class User(Base):
     is_active = Column(Boolean, default=True)  # Boolean column to indicate if the user is active, default is True
     role = Column(String)  # Role column to store user roles
 
+
     # Setting up a one-to-many relationship with the ToDos model The 'todos' attribute will contain a list of ToDos
     # objects associated with this User back_populates='owner' indicates that the 'owner' relationship in the ToDos
     # model will be used to handle the reverse relationship
