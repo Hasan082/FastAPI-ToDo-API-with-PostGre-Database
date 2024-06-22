@@ -19,18 +19,55 @@ This project implements a RESTful API for managing ToDo items using FastAPI, SQL
    pip install -r requirements.txt
    ```
 
-3. Start the FastAPI server:
+3. Set up the PostgreSQL database:
+
+   ```sql
+   -- Drop and create users table
+   DROP TABLE IF EXISTS users;
+
+   CREATE TABLE users (
+       id SERIAL PRIMARY KEY,
+       email VARCHAR(255) UNIQUE NOT NULL,
+       username VARCHAR(50) UNIQUE NOT NULL,
+       first_name VARCHAR(100),
+       last_name VARCHAR(100),
+       hashed_password VARCHAR(255),
+       is_active BOOLEAN DEFAULT TRUE,
+       role VARCHAR(50)
+   );
+
+   -- Drop and create todos table
+   DROP TABLE IF EXISTS todos;
+
+   CREATE TABLE todos (
+       id SERIAL PRIMARY KEY,
+       title VARCHAR(70),
+       description TEXT,
+       priority INTEGER,
+       completed BOOLEAN DEFAULT FALSE,
+       owner_id INTEGER NOT NULL,
+       FOREIGN KEY (owner_id) REFERENCES users (id)
+   );
+   ```
+
+4. Configure the database URL in the `.env` file:
+
+   ```
+   DATABASE_URL=postgresql://<username>:<password>@<host>:<port>/<database_name>
+   ```
+
+5. Start the FastAPI server:
 
    ```bash
    uvicorn main:app --reload
    ```
 
-4. The API will be available at `http://localhost:8000`. OpenAPI documentation is available at `http://localhost:8000/docs`.
+6. The API will be available at `http://localhost:8000`. OpenAPI documentation is available at `http://localhost:8000/docs`.
 
 ### Environment
 
 - Python 3.9 or higher
-- SQLite (default for development, can be changed in `database.py`)
+- PostgreSQL
 
 ## Project Structure
 
@@ -57,7 +94,7 @@ This is the main entry point of the FastAPI application. It sets up the FastAPI 
 
 ### `database.py`
 
-Contains the database configuration using SQLAlchemy. Defines `SessionLocal` for creating database sessions and initializes the SQLite database.
+Contains the database configuration using SQLAlchemy. Defines `SessionLocal` for creating database sessions and initializes the PostgreSQL database connection.
 
 ### `models.py`
 
@@ -93,7 +130,7 @@ Lists all Python dependencies required for the project. Install using `pip insta
 
 ## Notes
 
-- Ensure Python 3.9 or higher and SQLite are installed.
+- Ensure Python 3.9 or higher and PostgreSQL are installed.
 - Adjust database configuration (`database.py`) for production environments.
 - Securely manage `SECRET_KEY` and environment variables in production.
 
@@ -104,4 +141,3 @@ Lists all Python dependencies required for the project. Install using `pip insta
 - [Pydantic Documentation](https://pydantic-docs.helpmanual.io/)
 - [Passlib Documentation](https://passlib.readthedocs.io/)
 - [Starlette Documentation](https://www.starlette.io/)
-

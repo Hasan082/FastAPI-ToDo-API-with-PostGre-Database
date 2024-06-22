@@ -1,53 +1,55 @@
-annotated-types==0.7.0         # Provides support for annotated types, enhancing type annotations with metadata.
-anyio==4.4.0                   # Asynchronous concurrency library supporting multiple runtimes and protocols.
-bcrypt==4.1.3                  # Library for hashing passwords using the bcrypt hashing algorithm.
-certifi==2024.6.2              # Provides Mozilla's CA Bundle for SSL certificates verification.
-cffi==1.16.0                   # C Foreign Function Interface for Python, used for interfacing with C code.
-charset-normalizer==3.3.2      # Library for character set normalization in HTTP headers and content.
-click==8.1.7                   # Command-line interface creation kit, used for building command-line tools.
-cryptography==42.0.8           # Provides cryptographic recipes and primitives to Python developers.
-dnspython==2.6.1               # DNS toolkit for Python, used for DNS queries and manipulation.
-ecdsa==0.19.0                  # Library for ECDSA cryptographic signatures.
-email_validator==2.1.2         # Library for validating email addresses against RFC standards.
-fastapi==0.111.0               # Modern, fast web framework for building APIs with Python 3.7+ based on standard Python type hints.
-fastapi-cli==0.0.4             # CLI tools for FastAPI, facilitating project management and development tasks.
-h11==0.14.0                    # HTTP/1.1 library for Python, providing a low-level protocol implementation.
-httpcore==1.0.5                # Low-level HTTP client and server library built on top of h11 for HTTP/1 and HTTP/2.
-httptools==0.6.1               # Fast HTTP parser for Python, used for parsing HTTP requests and responses.
-httpx==0.27.0                  # Async HTTP client with a focus on correctness and performance.
-idna==3.7                      # Library for handling Internationalized Domain Names (IDNA).
-Jinja2==3.1.4                  # Templating engine for Python, used for generating dynamic HTML and text files.
-jwcrypto==1.5.6                # Library for JSON Web Encryption (JWE) and JSON Web Signatures (JWS).
-markdown-it-py==3.0.0          # Markdown parser for Python, converts Markdown syntax to HTML.
-MarkupSafe==2.1.5              # Implements a XML/HTML/XHTML Markup safe string for Python.
-mdurl==0.1.2                   # Library for parsing and manipulating URLs in Markdown documents.
-Naked==0.1.32                  # Simplifies the Python code-to-binary compilation process.
-orjson==3.10.5                 # Fast JSON library for Python, offering better performance than the standard library.
-passlib==1.7.4                 # Python library for password hashing and verification.
-psycopg2-binary==2.9.9         # PostgreSQL adapter for Python, optimized for performance and compatibility.
-pyasn1==0.6.0                  # ASN.1 data structures and protocols compiler for Python.
-pycparser==2.22                # C parser and AST generator written in Python, used by cffi.
-pydantic==2.7.4                # Data validation and settings management using Python type annotations.
-pydantic_core==2.18.4          # Core utilities for Pydantic, used for data validation and parsing.
-Pygments==2.18.0               # Syntax highlighting library for Python code and other languages.
-python-dotenv==1.0.1           # Reads .env files to load environment variables.
-python-jose==3.3.0             # Implementation of JOSE (JSON Object Signing and Encryption) for Python.
-python-multipart==0.0.9        # Streaming multipart parser for Python.
-PyYAML==6.0.1                  # YAML parser and emitter for Python.
-requests==2.32.3               # HTTP library for Python, simplifying HTTP requests.
-rich==13.7.1                   # Library for rich text and beautiful formatting in the terminal.
-rsa==4.9                       # Pure-Python RSA implementation.
-shellingham==1.5.4             # Python library to detect the shell currently running.
-six==1.16.0                    # Python 2 and 3 compatibility library.
-sniffio==1.3.1                 # Asyncio compatibility layer for non-async libraries.
-SQLAlchemy==2.0.30             # SQL toolkit and Object-Relational Mapping (ORM) for Python.
-starlette==0.37.2              # ASGI framework and toolkit, used as the foundation for FastAPI.
-status==0.2.5                  # HTTP status code constants.
-typer==0.12.3                  # Library for building command-line interfaces with Python.
-typing_extensions==4.12.2      # Backported and experimental type annotations for Python 3.7 and 3.8.
-ujson==5.10.0                  # UltraJSON, a fast JSON encoder and decoder for Python.
-urllib3==2.2.2                 # HTTP library with thread-safe connection pooling and file post support.
-uvicorn==0.30.1                # ASGI server for running FastAPI applications.
-uvloop==0.19.0                 # Ultra-fast asyncio event loop.
-watchfiles==0.22.0             # Library for watching files and directories for changes.
-websockets==12.0               # Library for building WebSocket servers and clients in Python.
+alembic==1.13.1
+annotated-types==0.7.0
+anyio==4.4.0
+bcrypt==4.1.3
+certifi==2024.6.2
+cffi==1.16.0
+charset-normalizer==3.3.2
+click==8.1.7
+cryptography==42.0.8
+dnspython==2.6.1
+ecdsa==0.19.0
+email_validator==2.1.2
+fastapi==0.111.0
+fastapi-cli==0.0.4
+h11==0.14.0
+httpcore==1.0.5
+httptools==0.6.1
+httpx==0.27.0
+idna==3.7
+Jinja2==3.1.4
+jwcrypto==1.5.6
+Mako==1.3.5
+markdown-it-py==3.0.0
+MarkupSafe==2.1.5
+mdurl==0.1.2
+Naked==0.1.32
+orjson==3.10.5
+passlib==1.7.4
+psycopg2-binary==2.9.9
+pyasn1==0.6.0
+pycparser==2.22
+pydantic==2.7.4
+pydantic_core==2.18.4
+Pygments==2.18.0
+python-dotenv==1.0.1
+python-jose==3.3.0
+python-multipart==0.0.9
+PyYAML==6.0.1
+requests==2.32.3
+rich==13.7.1
+rsa==4.9
+shellingham==1.5.4
+six==1.16.0
+sniffio==1.3.1
+SQLAlchemy==2.0.30
+starlette==0.37.2
+status==0.2.5
+typer==0.12.3
+typing_extensions==4.12.2
+ujson==5.10.0
+urllib3==2.2.2
+uvicorn==0.30.1
+uvloop==0.19.0
+watchfiles==0.22.0
+websockets==12.0
