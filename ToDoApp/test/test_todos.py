@@ -53,9 +53,9 @@ def test_todo():
     db.add(todo)
     db.commit()
     yield todo
-    # with engine.connect() as connection:
-    #     connection.execute(text("DELETE FROM todos"))
-    #     connection.commit()
+    with engine.connect() as connection:
+        connection.execute(text("DELETE FROM todos"))
+        connection.commit()
 
 
 def test_read_all_authenticated(test_todo):
