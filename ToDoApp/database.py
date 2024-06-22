@@ -1,7 +1,7 @@
 # Importing necessary components from SQLAlchemy
 from sqlalchemy import create_engine  # Used to create a connection to the database
-from sqlalchemy.orm import sessionmaker  # Used to create a configured "Session" class
-from sqlalchemy.ext.declarative import declarative_base  # Used to create a base class for our ORM models
+from sqlalchemy.orm import sessionmaker, declarative_base  # Used to create a configured "Session" class
+# from sqlalchemy.ext.declarative import declarative_base  # Used to create a base class for our ORM models
 
 # Defining the database URL
 # Here, we are using SQLite as the database and specifying the database file as 'todosapp.db'
