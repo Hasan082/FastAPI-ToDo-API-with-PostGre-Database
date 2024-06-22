@@ -5,12 +5,12 @@ from sqlalchemy.ext.declarative import declarative_base  # Used to create a base
 
 # Defining the database URL
 # Here, we are using SQLite as the database and specifying the database file as 'todosapp.db'
-SQLALCHEMY_DATABASE_URL = 'sqlite:///todosapp.db'
+SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:test1234!@localhost:5432/Todoappdatabase'
 
 # Creating the SQLAlchemy engine
 # The engine object is how SQLAlchemy communicates with the database
 # 'check_same_thread': False is specific to SQLite and allows the use of the same connection across multiple threads
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={'check_same_thread': False})
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 # Creating a configured "Session" class sessionmaker is a factory for creating new Session objects autocommit=False:
 # Transactions are managed manually, meaning we need to explicitly commit or rollback transactions autoflush=False:
