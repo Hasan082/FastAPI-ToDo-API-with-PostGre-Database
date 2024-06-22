@@ -31,7 +31,7 @@ def override_get_db():
 
 
 def override_get_current_user():
-    return {'username': 'test', 'id': 1, 'role': 'admin'}
+    return {'username': 'test', 'user_id': 1, 'role': 'admin'}
 
 
 app.dependency_overrides[get_db] = override_get_db
@@ -54,11 +54,31 @@ def test_todo():
     db.commit()
     yield todo
     with engine.connect() as connection:
-        connection.execute(text("DELETE FROM todos"))
+        connection.execute(text("DELETE FROM todos;"))
         connection.commit()
 
 
 def test_read_all_authenticated(test_todo):
     response = client.get('/')
     assert response.status_code == status.HTTP_200_OK
-    assert response.json() == []
+    assert response.json() == [{
+        'id': test_todo.id,
+        'title': test_todo.title,
+        'description': test_todo.description,
+        'priority': test_todo.priority,
+        'completed': test_todo.completed,
+        'owner_id': test_todo.owner_id
+    }]
+
+
+def test_read_one_authenticated(test_todo):
+    response = client.get(f'/todo/{test_todo.id}')
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == {
+        'id': test_todo.id,
+        'title': 'Test ToDo',
+        'description': 'Test ToDo',
+        'priority': 5,
+        'completed': False,
+        'owner_id': 1
+    }
