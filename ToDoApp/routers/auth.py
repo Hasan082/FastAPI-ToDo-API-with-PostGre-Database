@@ -1,27 +1,32 @@
-from datetime import timedelta, datetime
-from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
-from sqlalchemy.orm import Session
-from starlette import status
-from database import SessionLocal
-from models import User
-from passlib.context import CryptContext
-from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
-from jose import jwt, JWTError
+from datetime import timedelta, datetime  # Importing necessary datetime functions
+from typing import Annotated  # Importing Annotated for type annotations with metadata
+from fastapi import APIRouter, Depends, HTTPException  # Importing FastAPI components for routing and dependency injection
+from pydantic import BaseModel  # Importing BaseModel from Pydantic for request and response schemas
+from sqlalchemy.orm import Session  # Importing Session for database operations
+from starlette import status  # Importing HTTP status codes from starlette
+from database import SessionLocal  # Importing SessionLocal for database session
+from models import User  # Importing User model
+from passlib.context import CryptContext  # Importing CryptContext for password hashing
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer  # Importing OAuth2 components for security
+from jose import jwt, JWTError  # Importing JWT components from jose for token handling
 
+# Creating an APIRouter instance for the authentication routes
 router = APIRouter(
-    prefix='/auth',
-    tags=['auth']
+    prefix='/auth',  # Prefix for all routes in this router
+    tags=['auth']  # Tag for grouping routes in the OpenAPI documentation
 )
 
-SECRET_KEY = "d46c0355cd2ebe050dff966842bf952390be478ed52e04e40cd8543ad7a6eb61"
-ALGORITHM = "HS256"
+# Constants for JWT token generation
+SECRET_KEY = "d46c0355cd2ebe050dff966842bf952390be478ed52e04e40cd8543ad7a6eb61"  # Secret key for signing JWT tokens
+ALGORITHM = "HS256"  # Algorithm for JWT token encoding
 
+# Initializing CryptContext for password hashing
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Initializing OAuth2PasswordBearer for token authentication
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
 
 
+# Pydantic model for user registration request
 class UserRequest(BaseModel):
     username: str
     email: str
@@ -31,11 +36,13 @@ class UserRequest(BaseModel):
     role: str
 
 
+# Pydantic model for token response
 class Token(BaseModel):
     access_token: str
     token_type: str
 
 
+# Dependency function to get a database session
 def get_db():
     """
     Dependency function that provides a database session.
@@ -52,6 +59,7 @@ def get_db():
 db_dependency = Annotated[Session, Depends(get_db)]
 
 
+# Function to authenticate user by username and password
 def authenticate_user(username: str, password: str, db):
     user = db.query(User).filter(User.username == username).first()
     if not user:
@@ -61,6 +69,7 @@ def authenticate_user(username: str, password: str, db):
     return user
 
 
+# Function to create JWT access token
 def create_access_token(username: str, user_id: int, role: str, expire_delta: timedelta):
     encode = {'sub': username, 'id': user_id, 'role': role}
     expire = datetime.utcnow() + expire_delta
@@ -68,6 +77,7 @@ def create_access_token(username: str, user_id: int, role: str, expire_delta: ti
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
+# Dependency function to get current user from the token
 def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -81,6 +91,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Username or ID not found")
 
 
+# Endpoint to create a new user
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_user(db: db_dependency, create_user_request: UserRequest):
     create_user_model = User(
@@ -92,11 +103,11 @@ async def create_user(db: db_dependency, create_user_request: UserRequest):
         hashed_password=bcrypt_context.hash(create_user_request.password),
         is_active=True
     )
-
     db.add(create_user_model)
     db.commit()
 
 
+# Endpoint to generate access token on user login
 @router.post("/token", response_model=Token)
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: db_dependency):
     user = authenticate_user(form_data.username, form_data.password, db)
