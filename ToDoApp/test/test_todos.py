@@ -1,6 +1,8 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.pool import StaticPool
 from sqlalchemy.orm import sessionmaker
+
+from .. import models
 from ..database import Base
 from ..main import app
 from ..routers.todos import get_db, get_current_user
@@ -82,3 +84,27 @@ def test_read_one_authenticated(test_todo):
         'completed': False,
         'owner_id': 1
     }
+
+
+def test_read_one_authenticated_fail(test_todo):
+    response = client.get(f'/todo/999')
+    assert response.status_code == 404
+    assert response.json() == {'detail': 'ToDo not found'}
+
+
+def test_create_todo(test_todo):
+    response_data = {
+        'title': 'Test ToDo',
+        'description': 'Test ToDo',
+        'priority': 5,
+        'completed': False,
+    }
+    response = client.post('/todo', json=response_data)
+    assert response.status_code == status.HTTP_201_CREATED
+
+    db = TestingSessionLocal()
+    model = db.query(models.ToDos).filter(models.ToDos.id == 2).first()
+    assert model.title == response_data['title']
+    assert model.description == response_data['description']
+    assert model.priority == response_data['priority']
+    assert model.completed == response_data['completed']
