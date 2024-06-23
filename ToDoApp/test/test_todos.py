@@ -108,3 +108,50 @@ def test_create_todo(test_todo):
     assert model.description == response_data['description']
     assert model.priority == response_data['priority']
     assert model.completed == response_data['completed']
+
+
+def test_update_todo(test_todo):
+    response_data = {
+        'title': 'Test ToDo update',
+        'description': 'Test ToDo',
+        'priority': 5,
+        'completed': False,
+    }
+
+    response = client.put('/todo/1', json=response_data)
+    assert response.status_code == 204
+
+    db = TestingSessionLocal()
+    model = db.query(models.ToDos).filter(models.ToDos.id == 1).first()
+    assert model.title == response_data['title']
+
+
+def test_update_todo_fail(test_todo):
+    response_data = {
+        'title': 'Test ToDo',
+        'description': 'Test ToDo',
+        'priority': 5,
+        'completed': False,
+    }
+
+    response = client.put('/todo/999', json=response_data)
+    assert response.status_code == 404
+    assert response.json() == {'detail': 'ToDo not found'}
+
+    db = TestingSessionLocal()
+    model = db.query(models.ToDos).filter(models.ToDos.id == 1).first()
+    assert model.title == response_data['title']
+
+
+def test_delete_todo(test_todo):
+    response = client.delete(f'/todo/1')
+    assert response.status_code == 204
+    db = TestingSessionLocal()
+    model = db.query(models.ToDos).filter(models.ToDos.id == 1).first()
+    assert model is None
+
+
+def test_delete_todo_fail(test_todo):
+    response = client.delete(f'/todo/999')
+    assert response.status_code == 404
+    assert response.json() == {'detail': 'ToDo not found'}
